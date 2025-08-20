@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Level{% endblock %}
+
+{% block content %}
+<div class="{{ 'txtGreen' if isCorrect else 'txtRed' }}" style="margin-top:10px;">
+	<h1>{{ st }}</h1>
+	<p>You entered {{ result }}, which is {{ answer }}!
+	</p>
+	<br><br>
+</div>
+
+	<span class = "emoji">&#{{emoji}};</span>
+	<form action="{{url_for('main.math') }}">
+		<div class="button-wrapper"><input class="button" type="submit" value="Go to next question!" /></div>
+	</form>
+{% if answer == "Correct"%}
+<div id="points">+10 pts</div>
+{% endif %}
+
+{% endblock %}

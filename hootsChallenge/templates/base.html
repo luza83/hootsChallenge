@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{% block title %}Hoot's Challenge{% endblock %}</title>
+		<link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/hoot.png') }}">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+	<nav id="nav">
+		<ul>
+			<li><a href="{{ url_for('main.index') }}"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="{{ url_for('main.about') }}"><i class="fa fa-info-circle"></i> About</a></li>
+			<li><a href="{{ url_for('main.profile') }}"><i class="fa fa-user-circle"></i> Profile</a></li>
+			<li><a href="{{ url_for('main.logout') }}"><i class="fa fa-sign-out"></i> Log out</a></li>
+		</ul>	
+	</nav>
+
+	<div class="content">
+		{% block content %}{% endblock %}
+	</div>
+
+	<img class="owl-img" src="{{ url_for('static', filename='images/hoot.png') }}" alt="Wise Owl" draggable="false">
+</body>
+</html>

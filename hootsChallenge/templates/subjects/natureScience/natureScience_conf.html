@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Level{% endblock %}
+
+{% block content %}
+
+<div class="{{ 'txtGreen' if isCorrect else 'txtRed' }}" style="margin-top:10px;">
+	<h1>{{ feedback }}</h1>
+    <p>
+        You entered {{ userInput }}, which is {{ 'correct' if isCorrect else 'incorrect'}}!
+        {% if not isCorrect %}
+            The correct answer is {{result}}.
+        {% endif %}
+    </p> 
+    <br><br>
+</div>
+<span class = "emoji" >&#{{emoji}};</span>
+<form action="{{url_for('main.natureScience') }}">
+    <div class="button-wrapper">
+        <input class="button" type="submit" value="Go to next question!" />
+    </div>
+</form>
+{% if corr == "Correct" %}
+<div id="points">+10 pts</div>
+{% endif %}
+
+{% endblock %}

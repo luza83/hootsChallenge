@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Hoot's Challenge {% endblock %}</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/style.css') }}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+</head>
+	<body>
+
+		<div class="content_log">
+			<div class="txt">
+				<h1>Hoot's Challenge</h1>
+				<p>Be wise as an owl and improve your educational skills!</p>
+			</div>
+
+			<div>
+				<form method="POST" action="{{ url_for('main.index') }}">
+					<div class="input-group">
+						<label for="email"><i class="fas fa-envelope"></i></label>
+						<input type="email" name="email" placeholder="E-mail" id="email" value="test@gmail.com" required>
+					</div>
+
+					<div class="input-group">
+						<label for="password"><i class="fas fa-lock"></i></label>
+						<input type="password" name="password" placeholder="Password" id="password" value="123Abc"required>
+					</div>
+
+					{% with messages = get_flashed_messages() %}
+						{% if messages %}
+							<div class="msg">{{ messages[0] }}</div>
+						{% endif %}
+					{% endwith %}
+					<div class="button-wrapper">
+						<button type="submit" class="button">Login</button>
+						<a href="{{ url_for('main.register') }}" class="button">Register</a>
+					</div>
+			
+				</form>
+			</div>
+		</div>
+
+		<div class="background-img">
+			<img src="{{ url_for('static', filename='images/hoot.png') }}" alt="Wise Owl">
+		</div>
+
+	</body>
+</html>

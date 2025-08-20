@@ -1,0 +1,2 @@
+FLASK_APP=hootsChallenge
+FLASK_DEBUG=1

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Main Page{% endblock %}
+
+{% block content %}
+
+<div class="result">
+	<div class="txt">
+			<h1> Welcome {{session['username']}}! </h1><br> 
+			<p>Choose a subject!</p>
+	</div>
+
+	<div class="cards">
+		<!--Matte -->
+			<div class="flip-card">
+				<div class="flip-card-inner">
+					<div class="flip-card-front">
+						<span><img src="static/images/calculator.png" style="width:140px;height:140px;"></span>
+					</div>
+					<div class="flip-card-back">  
+						<a href="{{ url_for('main.math') }}" alt="Subject" style="text-decoration:none;color:white;">
+							<p>Math</p> 
+						</a>
+					</div>
+				</div>
+			</div>
+
+		<!--Naturfag -->
+
+			<div class="flip-card">
+				<div class="flip-card-inner">
+					<div class="flip-card-front">
+						<span><img src="static/images/nature.png" style="width:140px;height:140px;"></span>
+					</div>
+					<div class="flip-card-back">  
+						<a href="{{url_for('main.natureScience')}}" alt="Subject" style="text-decoration:none;color:white;">
+							<p>Natural science</p> 
+						</a>
+					</div>
+				</div>
+			</div>
+	</div>
+</div>
+{% endblock %}

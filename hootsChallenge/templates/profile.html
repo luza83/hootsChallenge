@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Your profile {% endblock %}
+
+{% block content %}
+<!--User page should include user's points, display their username, maybe email as well. User page can optionally allow you to change your password. -->
+<div class="result">
+	<h1>Hi {{name}}</h1><br>
+	<h3>These are your scores so far: </h3><br>
+	<h2>Math: Level {{ mathLevel }}</h2>
+		<p>{{ mathNextLevel - mathScore }} points to next level</p>
+		<div class="progress-bar-wrapper">
+			<div class="progress-bar-fill" style="width: {{ mathProgress }}%;"></div>
+		</div>
+		
+		{% if mathLevel == 3 %}
+			<p class="max-level">🎉 Max level reached!</p>
+		{% endif %}
+
+	<h2>Nature Science: Level {{ natureScienceLevel }}</h2>
+		<p>{{ natureScienceNextLevel - natureScienceScore }} points to next level</p>
+		<div class="progress-bar-wrapper">
+			<div class="progress-bar-fill" style="width: {{ natureScienceProgress }}%;"></div>
+		</div>
+
+		{% if natureScienceLevel == 3 %}
+			<p class="max-level">🎉 Max level reached!</p>
+		{% endif %}
+
+</div>
+
+{% endblock %}

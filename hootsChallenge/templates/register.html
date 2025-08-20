@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Register {% endblock %}</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/style.css') }}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+</head>
+<body>
+  	<div class="content_log">
+		
+		<div class ="txt">
+					<h2>Register </h2><br> 		
+		</div>
+		<div>
+			<form action="{{ url_for('main.register') }}" method="POST" autocomplete="off">
+				<div class="input-group">
+					<label for="username">
+						<i class="fas fa-user"></i>
+					</label>
+					<input type="text" name="username" placeholder="Username" id="username" required><br>
+				</div>
+				<div class="input-group">
+					<label for="password">
+						<i class="fas fa-lock"></i>
+					</label>
+					<input type="password" name="password" placeholder="Password" id="password" required><br>
+				</div>
+				<div class="input-group">
+					<label for="email">
+						<i class="fas fa-envelope"></i>
+					</label>
+					<input type="email" name="email" placeholder="Email" id="email" required>
+				</div>
+				
+				<div class="msg">{{ msg }}</div>
+				<div class="button-wrapper">
+					{% if not response %}
+						<input class= "button"type="submit" value="Register">
+					{% else %}	
+						<a class="button" href="{{ url_for('main.index') }}" style="text-decoration: none;">Go to Log in</a>
+					{% endif %}
+				</div>
+			</form>
+		</div>	
+	</div>
+</div>
+	</body>
+</html>

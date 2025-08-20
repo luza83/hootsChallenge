@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Level 1{% endblock %}
+
+{% block content %}
+<div class="txt">
+    <p>Level {{level}} Natural Science</p>
+ 
+    {% if question %}
+    <form action="{{ url_for('main.natureScience_conf') }}" method="post">
+        <div>
+            <h2>{{ question.question }}</h2>
+            <p>Choose an answer:</p>
+            {% for option in question.shuffledOptions %}
+                <label>
+                    <input type="radio" name="answer" value="{{ option }}">
+                    {{ option }}
+                    <input type="hidden" name="qAnswer" value="{{question.correctAnswer}}">
+                </label><br>
+            {% endfor %}
+        </div>
+        <div class="button-wrapper">
+            <input class="button" type="submit" value="Check">
+            <input class="button" type="reset" value="Clear">
+        </div>
+        
+    </form>
+{% else %}
+    <p>Failed to load question.</p>
+{% endif %}
+
+{% endblock %}
