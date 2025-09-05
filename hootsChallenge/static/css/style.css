@@ -180,11 +180,9 @@ form {
 /* Background Image */
 .background-img {
 		position: absolute;
-		/* bottom: 0;
-		right: 5%; */
+
 		bottom: 0;
 		left: 5%;
-		z-index: 1;
 		max-width: 300px;
 		opacity: 0.9;
 }
@@ -192,24 +190,9 @@ form {
 .background-img img {
 		width: 100%;
 		height: auto;
+		z-index: -1;
 }
 
-/* Optional: Star Particles (subtle magic touch) */
-body::before {
-		content: "";
-		position: absolute;
-		width: 200%;
-		height: 200%;
-		background: url('https://www.transparenttextures.com/patterns/stardust.png');
-		opacity: 0.05;
-		animation: moveStars 60s linear infinite;
-		z-index: 0;
-}
-
-@keyframes moveStars {
-		0% { transform: translate(0, 0); }
-		100% { transform: translate(-500px, -500px); }
-}
 
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
@@ -317,14 +300,34 @@ body::before {
 
 /* Owl Background Image */
 .owl-img {
-		position: fixed;
-		bottom: 0;
-		left: 5%;
-		width: 300px;
-		opacity: 0.9;
-		z-index: 0;
-		pointer-events: none;
+	position: fixed;
+	bottom: 0;
+	left: 5%;
+	width: 20vw;
+	max-width: 250px;
+	min-width: 100px;
+	opacity: 0.9;
+	z-index: -1;
+	pointer-events: none;
+	filter: brightness(1);
+	/* Default brightness (normal) */
+	transition: filter 0.3s ease;
+	/* Smooth transition */
 }
+
+@media (max-width: 950px) {
+	.owl-img {
+		filter: brightness(0.4);
+	}
+}
+
+@media (max-width: 600px) {
+	.owl-img {
+		display: none;
+	}
+}
+
+
 
 /* Optional star background effect */
 body::before {
@@ -426,6 +429,8 @@ width: 100%;
 height: 100%;
 -webkit-backface-visibility: hidden;
 backface-visibility: hidden;
+align-items: center;
+justify-content: center;
 }
 
 .flip-card-front {
@@ -443,10 +448,27 @@ line-height: 50px;
 color: white;
 text-decoration: none;
 }
+.card-back-link {
+	display: block;
+	width: 100%;
+	height: 100%;
+	color: white;
+	text-decoration: none;
+	pointer-events: none;
+	/* disabled by default */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Enable click only when back is visible (hovering) */
+.flip-card:hover .card-back-link {
+	pointer-events: auto;
+}
 
 /*Places emoji on right side*/
 .emoji {
-	font-size:120px;
+	font-size:100px;
 	position:absolute;
 	right:-15%;
 	bottom:75%;

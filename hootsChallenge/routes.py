@@ -127,7 +127,7 @@ def math():
         return render_template("subjects/matte/math.html", a=a, b=b, op=op_list[op_type], ans=ans, level=currentUser.mathLevel)
 
     elif currentUser.mathLevel == 2:
-        op_list = ["x", "/"]
+        op_list = ["x", "÷"]
         op_type = random.randint(0, 1)
 
         if op_type == 1:
@@ -139,14 +139,13 @@ def math():
                     ans = a // b
                     break
         else:
-            a = random.randint(1, 10)
+            a = random.randint(2, 10)
             b = random.randint(2, 10)
             ans = a * b
-
         return render_template("subjects/matte/math.html", a=a, b=b, op=op_list[op_type], ans=ans, level=currentUser.mathLevel)
 
     else:
-        op_list = ["x", "/"]
+        op_list = ["x", "÷"]
         op_type = random.randint(0, 1)
 
         if op_type == 1:
@@ -154,22 +153,34 @@ def math():
             b = random.randint(2, 10)
             ans = round(a / b, 2)  # Float division rounded
         else:
-            a = random.randint(1, 100)
+            a = random.randint(2, 100)
             b = random.randint(2, 100)
             ans = a * b
-
+        
         return render_template("subjects/matte/math.html", a=a, b=b, op=op_list[op_type], ans=ans, level=currentUser.mathLevel)
 
 	
 @main.route('/math_conf', methods=['post'])
 def math_conf():
-	if 'loggedin' in session:
-		inpUser=request.form['result']
-		ans=request.form['ans']
-		isCorrect, st, corr, emoji = check_answer(session["id"],"maths",inpUser, ans)
+    if 'loggedin' in session:
+        currentUser = User.query.get(session['id'])
+        if currentUser:
+            mathProgress, mathNextLevel = getProgress(currentUser.mathLevel,currentUser.mathScore)
+            inpUser=request.form['result']
+            ans=request.form['ans']
+            isCorrect, st, corr, emoji = check_answer(session["id"],"maths",inpUser, ans)
 
-		return render_template("subjects/matte/math_conf.html", result = inpUser, answer = corr, emoji = emoji, st = st, isCorrect = isCorrect)
-	return redirect(url_for('main.index'))	
+            return render_template("subjects/matte/math_conf.html", 
+                                   result = inpUser, 
+                                   answer = corr, 
+                                   emoji = emoji, 
+                                   st = st, 
+                                   isCorrect = isCorrect,
+                                   currentLevel = currentUser.mathLevel,
+                                   mathScore = currentUser.mathScore,
+                                   mathNextLevel = mathNextLevel)
+	
+    return redirect(url_for('main.index'))	
 	
 
 	###Nature science#####

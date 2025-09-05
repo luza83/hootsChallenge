@@ -17,7 +17,7 @@
 						<span><img src="static/images/calculator.png" style="width:140px;height:140px;"></span>
 					</div>
 					<div class="flip-card-back">  
-						<a href="{{ url_for('main.math') }}" alt="Subject" style="text-decoration:none;color:white;">
+						<a  class="card-back-link" href="{{ url_for('main.math') }}" alt="Subject" style="text-decoration:none;color:white;">
 							<p>Math</p> 
 						</a>
 					</div>
@@ -32,7 +32,7 @@
 						<span><img src="static/images/nature.png" style="width:140px;height:140px;"></span>
 					</div>
 					<div class="flip-card-back">  
-						<a href="{{url_for('main.natureScience')}}" alt="Subject" style="text-decoration:none;color:white;">
+						<a  class="card-back-link" href="{{url_for('main.natureScience')}}" alt="Subject" style="text-decoration:none;color:white;">
 							<p>Natural science</p> 
 						</a>
 					</div>
@@ -40,4 +40,5 @@
 			</div>
 	</div>
 </div>
+<img class="owl-img" src="{{ url_for('static', filename='images/hoot.png') }}" alt="Wise Owl" draggable="false">
 {% endblock %}

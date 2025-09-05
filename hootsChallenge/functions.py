@@ -156,7 +156,6 @@ def getProgress(level, score):
     if next_level:
         progress = (score - level_start) / (next_level - level_start) * 100
         progress = round(progress, 2)
-        print(progress)
     else:
         progress = 100  # Maxed out
 

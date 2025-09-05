@@ -8,6 +8,7 @@
 	<h3>These are your scores so far: </h3><br>
 	<h2>Math: Level {{ mathLevel }}</h2>
 		<p>{{ mathNextLevel - mathScore }} points to next level</p>
+		<span>Score = {{mathScore}}</span>
 		<div class="progress-bar-wrapper">
 			<div class="progress-bar-fill" style="width: {{ mathProgress }}%;"></div>
 		</div>
@@ -18,6 +19,7 @@
 
 	<h2>Nature Science: Level {{ natureScienceLevel }}</h2>
 		<p>{{ natureScienceNextLevel - natureScienceScore }} points to next level</p>
+		<span>Score = {{natureScienceScore}}</span>
 		<div class="progress-bar-wrapper">
 			<div class="progress-bar-fill" style="width: {{ natureScienceProgress }}%;"></div>
 		</div>

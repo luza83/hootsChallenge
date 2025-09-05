@@ -12,7 +12,7 @@
             <p>Choose an answer:</p>
             {% for option in question.shuffledOptions %}
                 <label>
-                    <input type="radio" name="answer" value="{{ option }}">
+                    <input type="radio" name="answer" value="{{ option }}" required>
                     {{ option }}
                     <input type="hidden" name="qAnswer" value="{{question.correctAnswer}}">
                 </label><br>
@@ -27,5 +27,5 @@
 {% else %}
     <p>Failed to load question.</p>
 {% endif %}
-
+<img class="owl-img" src="{{ url_for('static', filename='images/nature.png') }}" alt="Wise Owl" draggable="false">
 {% endblock %}
