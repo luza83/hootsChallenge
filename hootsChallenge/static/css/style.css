@@ -265,6 +265,7 @@ form {
 #nav {
 		position: fixed;
 		align-content:center;
+		justify-content: right;
 		top: 0;
 		width: 100%;
 		height: 10%;
@@ -298,7 +299,23 @@ form {
 		color: #ffd700;
 }
 
-/* Owl Background Image */
+
+.home-owl-img {
+	position: fixed;
+	bottom: 0;
+	left: 5%;
+	width: 20vw;
+	max-width: 300px;
+	min-width: 100px;
+	opacity: 0.9;
+	z-index: -1;
+	pointer-events: none;
+	filter: brightness(1);
+	/* Default brightness (normal) */
+	transition: filter 0.3s ease;
+	/* Smooth transition */
+}
+
 .owl-img {
 	position: fixed;
 	bottom: 0;
@@ -314,7 +331,6 @@ form {
 	transition: filter 0.3s ease;
 	/* Smooth transition */
 }
-
 @media (max-width: 950px) {
 	.owl-img {
 		filter: brightness(0.4);
@@ -328,23 +344,39 @@ form {
 }
 
 
-
-/* Optional star background effect */
-body::before {
-		content: "";
-		position: fixed;
-		width: 200%;
-		height: 200%;
-		background: url('https://www.transparenttextures.com/patterns/stardust.png');
-		opacity: 0.05;
-		z-index: 0;
-		animation: moveStars 60s linear infinite;
+.subject-progress-container {
+	position: fixed;
+	bottom: 0%;
+	right: 5%;
+	width: 30%;
+	z-index: 1;
 }
 
-@keyframes moveStars {
-		0% { transform: translate(0, 0); }
-		100% { transform: translate(-500px, -500px); }
+.subject-progress-bar {
+	box-shadow: 0 0 10px rgba(80, 47, 164, 0.8);
+	border-radius: 8px;
+	overflow: hidden;
+	position: relative;
+	height: 24px;
 }
+
+.subject-progress-fill {
+	background: linear-gradient(to right, #4caf50, #4caf4f18);
+	height: 100%;
+	transition: width 0.5s ease;
+}
+
+.subject-progress-text {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font-weight: bold;
+	color: white;
+	z-index: 2;
+	pointer-events: none;
+}
+
 .cards {
 	display: flex;
 	justify-content: center;
@@ -442,6 +474,7 @@ background-color: transparent;
 color: white;
 transform: rotateY(180deg);
 line-height: 50px;
+cursor: pointer;
 }
 
 .flip-card-back a:visited {
@@ -545,4 +578,8 @@ text-decoration: none;
 .max-level {
     color: green;
     font-weight: bold;
+}
+.spread-text {
+	display: flex;
+	justify-content: space-between;
 }

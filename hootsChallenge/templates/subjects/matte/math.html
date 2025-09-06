@@ -3,18 +3,32 @@
 
 {% block content %}
 <div class="txt">
-	<p>Level {{level}} math!</p>
 	<h3>What is {{ a }} {{ op }} {{ b }}?
 	</h3>
 </div>
-	<form action="{{url_for('main.math_conf')}}" method="post">
-		<div class="input-group">
-			<input type="number" name="result" placeholder="Enter Value..." value="" required>
-		</div>
-		<input type="hidden" name="ans" value={{ ans }}>
-		<div class="button-wrapper">
-			<input class="button" type="submit" value="Check!">
-		</div>	
-	</form>
+<form action="{{url_for('main.math_conf')}}" method="post">
+	<div class="input-group">
+		<input type="number" name="result" placeholder="Enter Value..." value="" required>
+	</div>
+	<input type="hidden" name="ans" value={{ ans }}>
+	<div class="button-wrapper">
+		<input class="button" type="submit" value="Check!">
+	</div>	
+</form>
+
 <img class="owl-img" src="{{ url_for('static', filename='images/calculator.png') }}" alt="Wise Owl" draggable="false">
+<div class="subject-progress-container">
+	<div class="subject-progress-bar">
+		<span class="subject-progress-text">{{mathProgress}}%</span>
+		<div class="subject-progress-fill" style="width: {{ mathProgress }}%;"></div>
+	</div>
+	<div class="txt" style="margin-top: 5px;">
+		<p class="spread-text">
+			<span>Math</span> 
+			<span>Level {{level}}</span>
+			<span>Score = {{mathScore}}</span>
+		</p>
+	</div>
+</div>
+
 {% endblock %}

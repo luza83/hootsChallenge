@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, url_for, flash, redirect,
 import random, json
 from werkzeug.security import check_password_hash
 from .models import User
-from .functions import CreateUser, check_answer, getProgress
+from .functions import CreateUser, check_answer, getProgress, GetSubjectScore, GetSubjectLevel
 import requests
 main = Blueprint("main", __name__)
 
@@ -109,8 +109,11 @@ def math():
         return redirect(url_for('main.index'))
 
     currentUser = User.query.get(session['id'])
+    if not currentUser:
+        return redirect(url_for('main.index'))	
+    
+    mathProgress, mathNextLevel = getProgress(currentUser.mathLevel,currentUser.mathScore)
 
-    # Level thresholds (assuming level2 and level3 are defined elsewhere)
     if currentUser.mathLevel == 1:
         a = random.randint(1, 100)
         b = random.randint(1, 100)
@@ -121,10 +124,9 @@ def math():
             ans = a + b
         else:
             if a < b:
-                a, b = b, a  # Ensure positive subtraction
+                a, b = b, a  
             ans = a - b
 
-        return render_template("subjects/matte/math.html", a=a, b=b, op=op_list[op_type], ans=ans, level=currentUser.mathLevel)
 
     elif currentUser.mathLevel == 2:
         op_list = ["x", "÷"]
@@ -142,7 +144,6 @@ def math():
             a = random.randint(2, 10)
             b = random.randint(2, 10)
             ans = a * b
-        return render_template("subjects/matte/math.html", a=a, b=b, op=op_list[op_type], ans=ans, level=currentUser.mathLevel)
 
     else:
         op_list = ["x", "÷"]
@@ -151,36 +152,48 @@ def math():
         if op_type == 1:
             a = random.randint(2, 100)
             b = random.randint(2, 10)
-            ans = round(a / b, 2)  # Float division rounded
+            ans = round(a / b, 2)  
         else:
             a = random.randint(2, 100)
             b = random.randint(2, 100)
             ans = a * b
         
-        return render_template("subjects/matte/math.html", a=a, b=b, op=op_list[op_type], ans=ans, level=currentUser.mathLevel)
+    return render_template("subjects/matte/math.html", 
+                        a=a, b=b, 
+                        op=op_list[op_type], 
+                        ans=ans, 
+                        level=currentUser.mathLevel,
+                        mathProgress=mathProgress,
+                        mathNextLevel=mathNextLevel,
+                        mathScore = currentUser.mathScore
+                        )
+
 
 	
 @main.route('/math_conf', methods=['post'])
 def math_conf():
     if 'loggedin' in session:
         currentUser = User.query.get(session['id'])
-        if currentUser:
-            mathProgress, mathNextLevel = getProgress(currentUser.mathLevel,currentUser.mathScore)
-            inpUser=request.form['result']
-            ans=request.form['ans']
-            isCorrect, st, corr, emoji = check_answer(session["id"],"maths",inpUser, ans)
-
-            return render_template("subjects/matte/math_conf.html", 
-                                   result = inpUser, 
-                                   answer = corr, 
-                                   emoji = emoji, 
-                                   st = st, 
-                                   isCorrect = isCorrect,
-                                   currentLevel = currentUser.mathLevel,
-                                   mathScore = currentUser.mathScore,
-                                   mathNextLevel = mathNextLevel)
+        if not currentUser:
+            return redirect(url_for('main.index'))	
+        
+        inpUser=request.form['result']
+        ans=request.form['ans']
+        isCorrect, st, corr, emoji = check_answer(session["id"],"maths",inpUser, ans)
+        mathScore = GetSubjectScore("maths", currentUser.id)
+        mathProgress, mathNextLevel = getProgress(currentUser.mathLevel,currentUser.mathScore)
+        return render_template("subjects/matte/math_conf.html", 
+                                result = inpUser, 
+                                answer = corr, 
+                                emoji = emoji, 
+                                st = st, 
+                                isCorrect = isCorrect,
+                                level = currentUser.mathLevel,
+                                mathScore = mathScore,
+                                mathProgress = mathProgress,
+                                mathNextLevel = mathNextLevel)
 	
-    return redirect(url_for('main.index'))	
+    
 	
 
 	###Nature science#####
@@ -191,6 +204,9 @@ def natureScience():
     
     if 'loggedin' in session:
         currentUser = User.query.get(session['id'])
+        if not currentUser:
+            return redirect(url_for('main.index'))
+        
         if currentUser.natureScienceLevel == 1: 
           difficulty = "easy"
         elif currentUser.natureScienceLevel == 2:
@@ -215,19 +231,42 @@ def natureScience():
             question["shuffledOptions"] = options
         else:
             questions = []
+
+        natureScienceScore = GetSubjectScore("natureScience", currentUser.id)
+        natureScienceProgress, natureScienceNextLevel = getProgress(currentUser.natureScienceLevel,currentUser.natureScienceScore)
         return render_template("subjects/natureScience/natureScience.html",  
 														question = question,
-														level =	currentUser.natureScienceLevel)
-    return redirect(url_for('main.index'))	
+														level =	currentUser.natureScienceLevel,
+                                                        natureScienceScore = natureScienceScore,
+                                                        natureScienceProgress = natureScienceProgress,
+                                                        natureScienceNextLevel = natureScienceNextLevel)
+    	
 
 @main.route('/natureScience_conf', methods=['post'])
 def natureScience_conf():
     if 'loggedin' in session:
+        currentUser = User.query.get(session['id'])
+        if not currentUser:
+            return redirect(url_for('main.index'))
+        
         userInput=request.form['answer']
         result = request.form['qAnswer']
         isCorrect, feedback, resultStr, emoji = check_answer(session["id"],"natureScience", userInput, result)
-        return render_template("subjects/natureScience/natureScience_conf.html",  userInput = userInput, result = result, emoji = emoji, resultStr = resultStr,feedback= feedback, isCorrect = isCorrect)
+        natureScienceScore = GetSubjectScore("natureScience", currentUser.id)
+        natureScienceProgress, natureScienceNextLevel = getProgress(currentUser.natureScienceLevel,currentUser.natureScienceScore)
+        return render_template("subjects/natureScience/natureScience_conf.html",  
+                               userInput = userInput, 
+                               result = result, 
+                               emoji = emoji, 
+                               resultStr = resultStr,
+                               feedback= feedback, 
+                               isCorrect = isCorrect,
+                               level = currentUser.natureScienceLevel,
+                               natureScienceScore = natureScienceScore,
+                               natureScienceProgress = natureScienceProgress,
+                               natureScienceNextLevel = natureScienceNextLevel
+                               )
         
-    return redirect(url_for('main.index'))
+    
 
 # endregion

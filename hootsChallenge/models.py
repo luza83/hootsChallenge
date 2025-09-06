@@ -11,16 +11,3 @@ class User(db.Model):
     mathLevel = db.Column(db.Integer, nullable=False, default = 1)
     natureScienceLevel = db.Column(db.Integer, nullable=False, default = 1)
 
-# class Subject(db.Model):
-#     __tablename__ = 'subject'
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(150), nullable=False)
-
-# class UserSubject(db.Model):
-#     __tablename__ = 'userSubject'
-#     userId = db.Column(db.Integer, nullable=False)
-#     subjectId = db.Column(db.Integer, nullable=False)
-#     subjectName = db.Column(db.String(150), nullable=False)
-#     score = db.Column(db.Integer, nullable=False, default = 0)
-#     level = db.Column(db.Integer, nullable=False, default = 1)
-    

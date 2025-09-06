@@ -6,9 +6,6 @@
 	<h1>{{ st }}</h1>
 	<p>
 		You entered {{ result }}, which is {{ answer }}!
-		{% if answer == "Correct"%}
-		You need {{mathNextLevel - mathScore}} to reach level {{currentLevel + 1}}.
-		{% endif %}
 	</p>
 	<br><br>
 </div>
@@ -21,4 +18,17 @@
 <div id="points">+10 pts</div>
 {% endif %}
 <img class="owl-img" src="{{ url_for('static', filename='images/calculator.png') }}" alt="Wise Owl" draggable="false">
+<div class="subject-progress-container">
+	<div class="subject-progress-bar">
+		<span class="subject-progress-text">{{mathProgress}}%</span>
+		<div class="subject-progress-fill" style="width: {{ mathProgress }}%;"></div>
+	</div>
+	<div class="txt" style="margin-top: 5px;">
+		<p class="spread-text">
+			<span>Math</span>
+			<span>Level {{level}}</span>
+			<span>Score = {{mathScore}}</span>
+		</p>
+	</div>
+</div>
 {% endblock %}

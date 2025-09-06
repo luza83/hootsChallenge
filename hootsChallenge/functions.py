@@ -95,11 +95,10 @@ def check_answer(userId, subject, userInput, correctAnswer):
     return isCorrect, feedbackString, resultStr, emoji
 
 def GetSubjectScore(subject, userId):
-    currentSubject =  "mathScore" if  subject == "maths" else "natureScience"
     user = User.query.get(userId)
     if not user:
           return 0
-    if currentSubject == "maths": 
+    if subject == "maths": 
         userScore = user.mathScore
         return userScore
     
@@ -156,7 +155,7 @@ def getProgress(level, score):
         next_level = None 
     if next_level:
         progress = (score - level_start) / (next_level - level_start) * 100
-        progress = round(progress, 2)
+        progress = round(progress)
     else:
         progress = 100  
 

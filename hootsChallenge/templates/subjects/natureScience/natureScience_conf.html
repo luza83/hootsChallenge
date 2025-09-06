@@ -23,5 +23,17 @@
 <div id="points">+10 pts</div>
 {% endif %}
 <img class="owl-img" src="{{ url_for('static', filename='images/nature.png') }}" alt="Wise Owl" draggable="false">
-
+<div class="subject-progress-container">
+    <div class="subject-progress-bar">
+        <span class="subject-progress-text">{{natureScienceProgress}}%</span>
+        <div class="subject-progress-fill" style="width: {{ natureScienceProgress }}%;"></div>
+    </div>
+    <div class="txt" style="margin-top: 5px;">
+        <p class="spread-text">
+            <span>Nature Science</span>
+            <span>Level {{level}}</span>
+            <span>Score = {{natureScienceScore}}</span>
+        </p>
+    </div>
+</div>
 {% endblock %}
