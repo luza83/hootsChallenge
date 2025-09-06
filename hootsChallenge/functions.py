@@ -3,6 +3,8 @@ from .extensions import db
 from werkzeug.security import generate_password_hash
 import re, random
 
+level2 = 500
+level3 = 1000
 
 def CreateUser(username, email, password):
     account = User.query.filter_by(email=email).first()
@@ -135,9 +137,9 @@ def UpdateSubjectLevel(userId, subject):
     return newNatureScienceLevel  
 
 def setLevel(score):
-    if score < 500:
+    if score < level2:
         return 1
-    elif score < 1000:
+    elif score < level3:
         return 2
     else:
         return 3
@@ -145,19 +147,18 @@ def setLevel(score):
 def getProgress(level, score):
     if level == 1:
         level_start = 0
-        next_level = 500
+        next_level = level2
     elif level == 2:
-        level_start = 500
-        next_level = 1000
+        level_start = level2
+        next_level = level3
     else:
-        level_start = 1000
-        next_level = None  # Max level
-
+        level_start = level3
+        next_level = None 
     if next_level:
         progress = (score - level_start) / (next_level - level_start) * 100
         progress = round(progress, 2)
     else:
-        progress = 100  # Maxed out
+        progress = 100  
 
     return progress, next_level
 
