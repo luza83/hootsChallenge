@@ -3,6 +3,7 @@ from flask import Flask
 from .extensions import db
 from dotenv import load_dotenv
 from .routes import main
+
 load_dotenv()  
 
 def create_app():
@@ -14,7 +15,7 @@ def create_app():
     db.init_app(app)
 
     with app.app_context():
-        from .models import User
+        from .models import User, Subject, User_Subject
         db.create_all()
     app.register_blueprint(main)
 

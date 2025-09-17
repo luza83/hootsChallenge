@@ -3,10 +3,16 @@
 
 {% block content %}
 <div class="{{ 'txtGreen' if isCorrect else 'txtRed' }}" style="margin-top:10px;">
-	<h1>{{ st }}</h1>
+	<h1>{{ feedbackString }}</h1>
 	<p>
 		You entered {{ result }}, which is {{ answer }}!
 	</p>
+	{%if isNewLevel%}
+	<div style="text-align: center;">
+		<p style="font-weight: bolder;">Congratulations you have reached level {{level}}!</p>
+		<span style="font-size: larger;">&#127881;&#129321;</span>
+	</div>
+	{%endif%}
 	<br><br>
 </div>
 
@@ -20,7 +26,13 @@
 <img class="owl-img" src="{{ url_for('static', filename='images/calculator.png') }}" alt="Wise Owl" draggable="false">
 <div class="subject-progress-container">
 	<div class="subject-progress-bar">
-		<span class="subject-progress-text">{{mathProgress}}%</span>
+		
+			{% if not isMaxLevel%} 
+				<span class="subject-progress-text">{{mathProgress}}%</span>
+			{% else %} 
+				<span class="subject-progress-text">Max Level Reached</span>
+			{% endif %}
+		</span>
 		<div class="subject-progress-fill" style="width: {{ mathProgress }}%;"></div>
 	</div>
 	<div class="txt" style="margin-top: 5px;">

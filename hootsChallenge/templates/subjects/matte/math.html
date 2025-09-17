@@ -6,11 +6,11 @@
 	<h3>What is {{ a }} {{ op }} {{ b }}?
 	</h3>
 </div>
-<form action="{{url_for('main.math_conf')}}" method="post">
+<form action="{{url_for('main.math_conf')}}" method="POST">
 	<div class="input-group">
-		<input type="number" name="result" placeholder="Enter Value..." value="" required>
+		<input type="number" name="userAnswer" placeholder="Enter Value..." value="" required>
 	</div>
-	<input type="hidden" name="ans" value={{ ans }}>
+	<input type="hidden" name="correctAnswer" value={{ ans }}>
 	<div class="button-wrapper">
 		<input class="button" type="submit" value="Check!">
 	</div>	
@@ -19,7 +19,11 @@
 <img class="owl-img" src="{{ url_for('static', filename='images/calculator.png') }}" alt="Wise Owl" draggable="false">
 <div class="subject-progress-container">
 	<div class="subject-progress-bar">
+	{% if not isMaxLevel %} 
 		<span class="subject-progress-text">{{mathProgress}}%</span>
+	{% else %}
+		<span class="subject-progress-text">Max Level Reached</span>
+	{% endif %}
 		<div class="subject-progress-fill" style="width: {{ mathProgress }}%;"></div>
 	</div>
 	<div class="txt" style="margin-top: 5px;">

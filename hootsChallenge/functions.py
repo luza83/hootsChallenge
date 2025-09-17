@@ -1,14 +1,14 @@
-from .models import User
+from .models import User, User_Subject, Subject
+from .schemas.user_progress import UserProgress
 from .extensions import db
 from werkzeug.security import generate_password_hash
 import re, random
 
-level2 = 500
-level3 = 1000
 
 def CreateUser(username, email, password):
     account = User.query.filter_by(email=email).first()
-    isUserCreated = False
+    userCreated = False
+    userSubjectsGenerated = False
     if account:
         msg = 'Account already exists!'
     elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
@@ -19,27 +19,53 @@ def CreateUser(username, email, password):
         msg = 'Please fill out the form!'
     else:     
         hashed_pass = generate_password_hash(password)
-        isUserCreated =True
         user = User(username=username, email=email, password=hashed_pass)
-        db.session.add(user)
-        db.session.commit()
-        msg = 'You have successfully registered!'
 
-    return msg, isUserCreated
+        try:
+            db.session.add(user)
+            db.session.commit()
+            userSubjectsGenerated = GenerateUserSubjects(user.id)
+        except Exception as e:
+            db.session.rollback() 
+            msg = e
+        else:
+            userCreated = user.id > 0 and userSubjectsGenerated 
+            msg = 'You have successfully registered!'
+        
+    return msg, userCreated
 
-def UpdateSubjectScore(userId, subject):
+## Level thresholds
+level2 = 500
+level3 = 1000
+
+
+def GenerateUserSubjects(userId):
+    subjects = db.session.query(Subject).all()
+    try:
+        for  s in subjects:
+            userSubject = User_Subject(userId = userId, subjectId = s.id, score= 0, level=1)
+            db.session.add(userSubject)
+            db.session.commit()
+        return True
+    except Exception as e:
+        return False
+
+
+def UpdateUserSubjectProgress(userId, subjectId):
     user = User.query.get(userId)
     if not user:
         return None
-    if subject == "maths":
-        newMathScore = user.mathScore + 10
-        user.mathScore = newMathScore
-        db.session.commit()
-        return newMathScore
-    newNatureScienceScore = user.natureScienceScore + 10
-    user.natureScienceScore = newNatureScienceScore
+    userSubject = User_Subject.query.filter_by(userId=userId, subjectId=subjectId).first()
+    level = setLevel(userSubject.score)
+    newLevel = False
+    if level != userSubject.level:
+        userSubject.level = level
+        newLevel = True
+    newScore = userSubject.score + 10
+    userSubject.score = newScore
     db.session.commit()
-    return newNatureScienceScore  
+
+    return newLevel
   
 # Region Subjects
 correctAnswerEmoji = [
@@ -80,60 +106,21 @@ wrongAnswerFeedback = [
 ]
 
 
-def check_answer(userId, subject, userInput, correctAnswer):
+def check_answer(userId, subjectId, userInput, correctAnswer):
+    
     if userInput == correctAnswer:
         isCorrect = True
-        UpdateSubjectScore(userId, subject)
-        UpdateSubjectLevel(userId, subject)
+        isNewLevelReached = UpdateUserSubjectProgress(userId, subjectId)
         feedbackString = random.choice(correctAnswerFeedback)
         resultStr, emoji = "Correct", random.choice(correctAnswerEmoji)
     else:
         isCorrect = False
+        isNewLevelReached = False
         feedbackString = random.choice(wrongAnswerFeedback)
         resultStr, emoji = f"Incorrect. The correct answer is {correctAnswer}", random.choice(wrongAnswerEmoji)
     
-    return isCorrect, feedbackString, resultStr, emoji
+    return isCorrect, feedbackString, resultStr, emoji, isNewLevelReached
 
-def GetSubjectScore(subject, userId):
-    user = User.query.get(userId)
-    if not user:
-          return 0
-    if subject == "maths": 
-        userScore = user.mathScore
-        return userScore
-    
-    userScore = user.natureScienceScore
-    return userScore
-
-def GetSubjectLevel(subject, userId):
-    currentSubject =  "mathLevel" if  subject == "maths" else "natureScienceLevel"
-    user = User.query.get(userId)
-    if not user:
-          return 0
-    if currentSubject == "maths": 
-        userLevel = user.mathLevel
-        return userLevel
-    
-    userLevel = user.natureScienceLevel
-    return userLevel
-
-def UpdateSubjectLevel(userId, subject):
-    user = User.query.get(userId)
-    if not user:
-        return None
-      
-    if subject == "maths":
-        newMathLevel = setLevel(user.mathScore)
-        if newMathLevel != user.mathLevel:
-            user.mathLevel = newMathLevel
-            db.session.commit()
-        return newMathLevel
-    
-    newNatureScienceLevel = setLevel(user.natureScienceScore)
-    if newNatureScienceLevel != user.natureScienceLevel:
-        user.natureScienceLevel = newNatureScienceLevel
-        db.session.commit()
-    return newNatureScienceLevel  
 
 def setLevel(score):
     if score < level2:
@@ -143,23 +130,42 @@ def setLevel(score):
     else:
         return 3
 
-def getProgress(level, score):
-    if level == 1:
-        level_start = 0
-        next_level = level2
-    elif level == 2:
-        level_start = level2
-        next_level = level3
+def getUserProgress(userId):
+    userSubjects = User_Subject.query.filter(User_Subject.userId == userId).all()
+    userSubjectsProgress = []
+    for item in userSubjects:
+        userProgress = calculateProgress(userSubject=item)
+        userSubjectsProgress.append(userProgress)
+
+    return userSubjectsProgress
+
+
+def getSubjectProgress(userId, subjectId):
+    userSubject = User_Subject.query.filter_by(userId=userId, subjectId=subjectId).first()
+    userSubjectsProgress = calculateProgress(userSubject=userSubject)
+   
+    return userSubjectsProgress
+
+def calculateProgress(userSubject):
+    subject = Subject.query.get(userSubject.subjectId)
+    isMaxLevel = False
+    if userSubject.level == 1:
+        currentlevel_start = 0
+        nextLevel_start = level2
+    elif userSubject.level == 2:
+        currentlevel_start = level2
+        nextLevel_start = level3
     else:
-        level_start = level3
-        next_level = None 
-    if next_level:
-        progress = (score - level_start) / (next_level - level_start) * 100
+        currentlevel_start = level3
+        nextLevel_start = None 
+        isMaxLevel = True
+    if nextLevel_start:
+        progress = (userSubject.score - currentlevel_start) / (nextLevel_start - currentlevel_start) * 100
         progress = round(progress)
     else:
-        progress = 100  
-
-    return progress, next_level
+        progress = 100
+    userProgress = UserProgress(name=subject.subjectName, progress=progress,level=userSubject.level, score=userSubject.score, nextLevelStart=nextLevel_start, isMaxLevel=isMaxLevel)
+    return userProgress
 
 # EndRegion
         

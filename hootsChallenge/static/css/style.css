@@ -82,6 +82,7 @@ form {
 		font-size: 3rem;
 		color: #ffd700;
 		text-shadow: 0 0 10px #fff, 0 0 20px #ffd700;
+		margin-top: 10px;
 		margin-bottom: 10px;
 }
 
@@ -170,6 +171,7 @@ form {
 		box-shadow: 0 0 10px #8a2be2;
 		margin-right: 10px;
 		transition: transform 0.2s ease, box-shadow 0.3s ease;
+		text-decoration: none;
 }
 
 .button:hover {
@@ -361,7 +363,7 @@ form {
 }
 
 .subject-progress-fill {
-	background: linear-gradient(to right, #4caf50, #4caf4f18);
+	background: linear-gradient(to right, #4caf50, #4caf4f49);
 	height: 100%;
 	transition: width 0.5s ease;
 }
@@ -582,4 +584,29 @@ text-decoration: none;
 .spread-text {
 	display: flex;
 	justify-content: space-between;
+}
+.options-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 20px;
+	max-width: 400px;
+	margin: 0 auto;
+}
+
+.option-button {
+	width: 100%;
+	border: none;
+	color: white;
+	background-color: transparent;
+	padding: 12px;
+	border-radius: 10px;
+	font-size: 1rem;
+	cursor: pointer;
+	box-shadow: 0 0 10px #8a2be2;
+	transition: all 0.3s ease;
+}
+
+.option-button.selected {
+	box-shadow: 0 0 20px #8a2be2;
+	color: #ffd700;
 }

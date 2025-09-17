@@ -4,33 +4,60 @@
 {% block content %}
 <div class="txt">
     <p>Level {{level}} Natural Science</p>
- 
     {% if question %}
-    <form action="{{ url_for('main.natureScience_conf') }}" method="post">
+    <form action="{{ url_for('main.natureScience_conf') }}" method="POST" style="text-align: center;">
         <div>
             <h2>{{ question.question }}</h2>
             <p>Choose an answer:</p>
-            {% for option in question.shuffledOptions %}
-                <label>
-                    <input type="radio" name="answer" value="{{ option }}" required>
+            <input type="hidden" name="correctAnswer" value="{{ question.correctAnswer }}">
+            <input type="hidden" name="userAnswer" id="selected-answer" required>
+            <div class="options-grid">
+                {% for option in question.shuffledOptions %}
+                <button type="button" class="option-button" onclick="selectOption('{{ option }}', this)">
                     {{ option }}
-                    <input type="hidden" name="qAnswer" value="{{question.correctAnswer}}">
-                </label><br>
-            {% endfor %}
+                </button>
+                {% endfor %}
+            </div>
+
         </div>
+    
+        <br>
         <div class="button-wrapper">
-            <input class="button" type="submit" value="Check">
-            <input class="button" type="reset" value="Clear">
+            <input class="button" type="submit" value="Submit">
         </div>
-        
     </form>
-{% else %}
-    <p>Failed to load question.</p>
-{% endif %}
+    <script>
+        function selectOption(value, button) {
+            document.getElementById('selected-answer').value = value;
+            document.querySelectorAll('.option-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+
+            button.classList.add('selected');
+        }
+        document.querySelector('form').addEventListener('submit', function (e) {
+                const selectedAnswer = document.getElementById('selected-answer').value;
+                if (!selectedAnswer) {
+                    e.preventDefault(); // Stop form from submitting
+                    alert('Please select an option before submitting.');
+                }
+            });
+    </script>
+    {% else %}
+        <p>Failed to load question.</p>
+    {% endif %}
+
 <img class="owl-img" src="{{ url_for('static', filename='images/nature.png') }}" alt="Wise Owl" draggable="false">
 <div class="subject-progress-container">
     <div class="subject-progress-bar">
-        <span class="subject-progress-text">{{natureScienceProgress}}%</span>
+        {%if not isMaxLevel%} <span class="subject-progress-text">
+            {{natureScienceProgress}}%
+        </span>
+        {%else%}
+        <span class="subject-progress-text">
+            Max Level Reached
+        </span>
+        {%endif%}
         <div class="subject-progress-fill" style="width: {{ natureScienceProgress }}%;"></div>
     </div>
     <div class="txt" style="margin-top: 5px;">
@@ -41,4 +68,5 @@
         </p>
     </div>
 </div>
+
 {% endblock %}
