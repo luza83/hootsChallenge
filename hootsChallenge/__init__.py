@@ -9,10 +9,21 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
     print("✅ Flask app is being created!")
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+
+    database_url = os.getenv("DATABASE_URL")
+
+    if database_url:
+        database_url = database_url.replace(
+            "postgresql://",
+            "postgresql+psycopg2://",
+            1
+        )
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv("APP_KEY")
     db.init_app(app)
+
 
     with app.app_context():
         from .models import User, Subject, User_Subject
