@@ -7,9 +7,10 @@
 	<h3>Hi {{name}}</h3><br>
 	<p>These are your scores so far: </p><br>
 </div>
+<div class="profile-subjects">
 {% for subject in subjectsProgress %}
-	<div style="display: inline-flex; margin-right: 30px; max-width: 400px;">
-			<div class="result" style="margin-bottom: 20px;">
+	<div class="profile-subject-card">
+			<div class="result">
 				<h2>{{subject.subjectName}}: Level {{ subject.level }}</h2>
 				{% if not subject.isMaxLevel %}
 					<p>{{ subject.nextLevelStart - subject.score }} points to next level</p>
@@ -24,6 +25,6 @@
 			</div>
 	</div>
 {% endfor %}
-
+</div>
 
 {% endblock %}

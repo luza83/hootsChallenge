@@ -8,16 +8,42 @@
 
 	<!-- CSS -->
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
-	<nav id="nav">
+	<nav id="nav" aria-label="Main navigation">
+		<input class="nav-toggle" type="checkbox" id="nav-toggle">
+		<label class="nav-toggle-label" for="nav-toggle" aria-label="Toggle navigation">
+			<span aria-hidden="true"></span>
+			<span aria-hidden="true"></span>
+			<span aria-hidden="true"></span>
+		</label>
 		<ul>
-			<li><a href="{{ url_for('main.index') }}"><i class="fa fa-home" title="Main Menu"></i></a></li>
-			<li><a href="{{ url_for('main.about') }}"><i class="fa fa-info-circle" title="About"></i></a></li>
-			<li><a href="{{ url_for('main.profile') }}"><i class="fa fa-user-circle" title="Profile"></i></a></li>
-			<li><a href="{{ url_for('main.logout') }}"><i class="fa fa-sign-out" title="Log Out"></i></a></li>
+			<li>
+				<a href="{{ url_for('main.index') }}">
+					<i class="fa fa-home" title="Home"></i>
+					Home
+				</a>
+			</li>
+			<li>
+				<a href="{{ url_for('main.about') }}">
+					<i class="fa fa-info-circle" title="About"></i>
+					About
+				</a>
+			</li>
+			<li>
+				<a href="{{ url_for('main.profile') }}">
+					<i class="fa fa-user-circle" title="Profile"></i>
+					Profile
+				</a>
+			</li>
+			<li>
+				<a href="{{ url_for('main.logout') }}">
+					<i class="fa fa-sign-out" title="Log Out"></i>
+					Log Out
+				</a>
+			</li>
 		</ul>	
 	</nav>
 

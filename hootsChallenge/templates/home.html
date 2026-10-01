@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<div class="result">
+<div class="home-menu">
 	<div class="txt">
 			<h1> Welcome {{session['username']}}! </h1><br> 
 			<p>Choose a subject!</p>
@@ -18,7 +18,7 @@
 					</div>
 					<div class="flip-card-back">  
 						<a  class="card-back-link" href="{{ url_for('main.math') }}" alt="Subject" style="text-decoration:none;color:white;">
-							<p>Math</p> 
+							<h3>Math</h3>
 						</a>
 					</div>
 				</div>
@@ -32,8 +32,9 @@
 						<span><img src="static/images/nature.png" style="width:140px;height:140px;"></span>
 					</div>
 					<div class="flip-card-back">  
-						<a  class="card-back-link" href="{{url_for('main.natureScience')}}" alt="Subject" style="text-decoration:none;color:white;">
-							<p>Natural science</p> 
+						<a  class="card-back-link" href="{{url_for('main.natureScience')}}" alt="Subject" >
+							
+							<h3>Natural science</h3>
 						</a>
 					</div>
 				</div>

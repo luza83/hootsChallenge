@@ -3,17 +3,20 @@
 
 {% block content %}
 <div class="txt">
-	<h3>What is {{ a }} {{ op }} {{ b }}?
+	<h3>What is {{ question_text }}?
 	</h3>
 </div>
 <form action="{{url_for('main.math_conf')}}" method="POST">
 	<div class="input-group">
-		<input type="number" name="userAnswer" placeholder="Enter Value..." value="" required>
+		<input  name="userAnswer" placeholder="Enter Value..." value="" required>
 	</div>
 	<input type="hidden" name="correctAnswer" value={{ ans }}>
 	<div class="button-wrapper">
 		<input class="button" type="submit" value="Check!">
 	</div>	
+	{% if math_error %}
+	<p class="error">{{ math_error }}</p>
+	{% endif %}
 </form>
 
 <img class="owl-img" src="{{ url_for('static', filename='images/calculator.png') }}" alt="Wise Owl" draggable="false">

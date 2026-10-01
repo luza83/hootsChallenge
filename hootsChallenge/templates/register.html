@@ -14,7 +14,7 @@
 		<div class ="txt">
 					<h2>Register </h2><br> 		
 		</div>
-		<div>
+		<div style="align-items: center; display: flex; justify-content: center;">
 			<form action="{{ url_for('main.register') }}" method="POST" autocomplete="off">
 				<div class="input-group">
 					<label for="username">
@@ -36,9 +36,10 @@
 				</div>
 				
 				<div class="msg">{{ msg }}</div>
-				<div class="button-wrapper">
+				<div class="button-wrapper" >
 					{% if not response %}
 						<input class= "button"type="submit" value="Register">
+						<a class="button" href="{{ url_for('main.index') }}" style="text-decoration: none;">Log in</a>
 					{% else %}	
 						<a class="button" href="{{ url_for('main.index') }}" style="text-decoration: none;">Go to Log in</a>
 					{% endif %}

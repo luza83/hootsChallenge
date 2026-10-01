@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, url_for, flash, redirect,
 import random, json
 from werkzeug.security import check_password_hash
 from .models import User, Subject
-from .functions import CreateUser, check_answer, getUserProgress, getSubjectProgress
+from .functions import CreateUser, check_answer, getUserProgress, getSubjectProgress, generate_problem
 import requests
 main = Blueprint("main", __name__)
 
@@ -96,74 +96,29 @@ def level():
 		###Mathematics###
 @main.route('/math')
 def math():
-
     if 'loggedin' not in session:
         return redirect(url_for('main.index'))
 
     currentUser = User.query.get(session['id'])
-    
     if not currentUser:
-        return redirect(url_for('main.index'))	
+        return redirect(url_for('main.index'))
+
     subject = Subject.query.filter_by(subjectName='Math').first()
     subjectProgress = getSubjectProgress(currentUser.id, subject.id)
 
+    question_text, ans = generate_problem(subjectProgress.level)
+    math_error = session.pop('math_error', None)
 
-    if subjectProgress.level == 1:
-        a = random.randint(1, 100)
-        b = random.randint(1, 100)
-        op_list = ["+", "-"]
-        op_type = random.randint(0, 1)
+    return render_template("subjects/matte/math.html",
+                           question_text=question_text,
+                           ans=ans,
+                           level=subjectProgress.level,
+                           mathProgress=subjectProgress.progressPercentage,
+                           mathNextLevel=subjectProgress.nextLevelStart,
+                           mathScore=subjectProgress.score,
+                           isMaxLevel=subjectProgress.isMaxLevel,
+                           math_error=math_error)
 
-        if op_type == 0:
-            ans = a + b
-        else:
-            if a < b:
-                a, b = b, a  
-            ans = a - b
-
-
-    elif subjectProgress.level == 2:
-        op_list = ["x", "÷"]
-        op_type = random.randint(0, 1)
-
-        if op_type == 1:
-            # Division with exact result
-            while True:
-                a = random.randint(2, 100)
-                b = random.randint(2, 10)
-                if a % b == 0:
-                    ans = a // b
-                    break
-        else:
-            a = random.randint(2, 10)
-            b = random.randint(2, 10)
-            ans = a * b
-
-    else:
-        op_list = ["x", "÷"]
-        op_type = random.randint(0, 1)
-
-        if op_type == 1:
-            a = random.randint(2, 100)
-            b = random.randint(2, 10)
-            ans = round(a / b, 2)  
-        else:
-            a = random.randint(2, 100)
-            b = random.randint(2, 100)
-            ans = a * b
-        
-    return render_template("subjects/matte/math.html", 
-                        a=a, b=b, 
-                        op = op_list[op_type], 
-                        ans = ans, 
-                        level = subjectProgress.level,
-                        mathProgress = subjectProgress.progressPercentage,
-                        mathNextLevel = subjectProgress.nextLevelStart,
-                        mathScore = subjectProgress.score,
-                        isMaxLevel =subjectProgress.isMaxLevel
-                        )
-
-	
 @main.route('/math_conf', methods=['GET', 'POST'])
 def math_conf():
     if 'loggedin' not in session:
@@ -176,8 +131,15 @@ def math_conf():
         return redirect(url_for('main.index'))
 
     if request.method == 'POST':
-        userInput = request.form['userAnswer']
+        userInput = request.form['userAnswer'].strip()
         correctAnswer = request.form['correctAnswer']
+
+        # Validate input
+        try:
+            float(userInput)
+        except (ValueError, TypeError):
+            session['math_error'] = "Please enter a valid number (e.g. 42 or 3.5)"
+            return redirect(url_for('main.math'))
 
         isCorrect, feedbackString, resultStr, emoji, isNewLevel = check_answer(session["id"], subject.id, userInput, correctAnswer)
 
@@ -209,10 +171,9 @@ def math_conf():
                            mathNextLevel=subjectProgress.nextLevelStart,
                            isMaxLevel =subjectProgress.isMaxLevel)
     else:
-        return redirect(url_for('main.math'))
+        return redirect(url_for('main.math'))   
 
-
-	###Nature science#####
+###Nature science#####
 
 @main.route('/natureScience')
 def natureScience():
