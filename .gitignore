@@ -2,3 +2,5 @@
 .env
 __pycache__/
 .flaskenv
+.DS_Store
+.DS_Store
